@@ -19,6 +19,7 @@ const SCORE_PER_ALIEN = 1
 const BOSS_INCOMING_DURATION_MS = 3000
 const BOSS_DAMAGE_PER_HIT = 10
 const PLAYER_BULLET_DAMAGE_TO_BOSS = 10
+const BULLET_WIPE_DURATION_MS = 600
 
 function hitTest(b, a) {
   return b.x + b.w > a.x && b.x < a.x + a.w && b.y < a.y + a.h && b.y + b.h > a.y
@@ -40,6 +41,7 @@ export function initGame(canvas) {
 
   let phase = 'aliens'
   let bossIncomingStart = 0
+  let bulletWipeStart = 0
   let boss = null
   let score = 0
 
@@ -98,6 +100,27 @@ export function initGame(canvas) {
 
   function update(dt) {
     if (phase === 'defeat' || phase === 'victory') return
+
+    if (phase === 'wipe_to_boss' || phase === 'wipe_to_victory') {
+      // During screenwipe, let the player keep moving but block new shots.
+      player.update(dt, InputBus)
+      bullets.update(dt)
+
+      const now = performance.now()
+      const done =
+        now - bulletWipeStart >= BULLET_WIPE_DURATION_MS || bullets.bullets.length === 0
+
+      if (done) {
+        bullets.bullets.splice(0, bullets.bullets.length)
+        if (phase === 'wipe_to_boss') {
+          phase = 'boss_incoming'
+          bossIncomingStart = performance.now()
+        } else {
+          phase = 'victory'
+        }
+      }
+      return
+    }
     if (!player.isAlive() && phase === 'boss') {
       phase = 'defeat'
       return
@@ -116,8 +139,11 @@ export function initGame(canvas) {
         return
       }
       if (aliens.getAlive().length === 0) {
-        phase = 'boss_incoming'
-        bossIncomingStart = performance.now()
+        phase = 'wipe_to_boss'
+        bulletWipeStart = performance.now()
+        for (const b of bullets.bullets) {
+          b.vy = Math.min(b.vy, -800)
+        }
       }
     } else if (phase === 'boss_incoming') {
       if (performance.now() - bossIncomingStart >= BOSS_INCOMING_DURATION_MS) {
@@ -139,7 +165,19 @@ export function initGame(canvas) {
       }
       updatePlayerBulletsVsBoss()
       if (!player.isAlive()) phase = 'defeat'
-      else if (!boss.isAlive()) phase = 'victory'
+      else if (!boss.isAlive()) {
+        phase = 'wipe_to_victory'
+        bulletWipeStart = performance.now()
+        for (const b of bullets.bullets) {
+          b.vy = Math.min(b.vy, -800)
+        }
+        if (boss) {
+          const bossBullets = boss.getBullets()
+          for (const b of bossBullets) {
+            b.vy = Math.min(b.vy, -600)
+          }
+        }
+      }
     }
   }
 

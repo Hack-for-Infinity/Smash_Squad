@@ -17,7 +17,7 @@ export function createPlayerSprite() {
       '...WW..WW...',
       '..WW....WW..',
     ],
-    { W: '#e5e7eb' },
+    { W: '#e5e7eb', G: '#38bdf8' },
   )
 }
 

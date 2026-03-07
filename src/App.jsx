@@ -17,6 +17,7 @@ function App() {
   return (
     <div className="app-layout">
       <aside className="game-ui">
+        <div className="game-ui-title">Retro Spaceship Shooter</div>
         <div className="game-ui-header">Face controls</div>
         <div className="face-tracker-wrap">
           <FaceTracker showVideo />
@@ -30,7 +31,7 @@ function App() {
           height={480}
           style={{
             display: 'block',
-            background: '#0a0a12',
+            background: 'transparent',
             width: '100%',
             height: '100%',
             objectFit: 'contain',
