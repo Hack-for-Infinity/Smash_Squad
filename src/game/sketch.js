@@ -7,7 +7,7 @@
 import { InputBus } from '../face/inputBus.jsx'
 
 const PLAYER_SIZE = 24
-const PLAYER_SPEED = 5
+const PLAYER_SPEED = 2
 const ALIEN_SIZE = 20
 const ALIEN_COLS = 10
 const ALIEN_ROWS = 3

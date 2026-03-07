@@ -15,7 +15,7 @@ const NOSE_TIP_INDEX = 4
 const UPPER_LIP_INDEX = 13
 const LOWER_LIP_INDEX = 14
 
-// Head position thresholds (normalized 0–1). Use InputBus.deadZone for center.
+// Head position thresholds: use InputBus.deadZone for the center band (face only).
 const CENTER_LEFT = 0.5 - InputBus.deadZone / 2
 const CENTER_RIGHT = 0.5 + InputBus.deadZone / 2
 
