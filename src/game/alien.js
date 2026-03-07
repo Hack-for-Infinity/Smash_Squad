@@ -74,9 +74,12 @@ export function createAlienSwarm(options = {}) {
   }
 
   function draw(ctx) {
+    const sprite = options.sprite ?? null
     ctx.fillStyle = options.color ?? '#4361ee'
     for (const a of aliens) {
-      if (a.alive) ctx.fillRect(a.x, a.y, a.w, a.h)
+      if (!a.alive) continue
+      if (sprite) sprite.draw(ctx, a.x, a.y, a.w, a.h)
+      else ctx.fillRect(a.x, a.y, a.w, a.h)
     }
   }
 

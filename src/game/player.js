@@ -42,6 +42,11 @@ export function createPlayer(options = {}) {
   }
 
   function draw(ctx) {
+    const sprite = options.sprite ?? null
+    if (sprite) {
+      sprite.draw(ctx, state.x, state.y, state.w, state.h)
+      return
+    }
     ctx.fillStyle = options.color ?? '#e63946'
     ctx.fillRect(state.x, state.y, state.w, state.h)
   }

@@ -28,7 +28,14 @@ function App() {
           ref={canvasRef}
           width={640}
           height={480}
-          style={{ display: 'block', background: '#0a0a12', width: '100%', height: '100%', objectFit: 'contain' }}
+          style={{
+            display: 'block',
+            background: '#0a0a12',
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            imageRendering: 'pixelated',
+          }}
         />
       </div>
     </div>

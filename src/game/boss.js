@@ -97,8 +97,13 @@ export function createBoss(options = {}) {
   }
 
   function draw(ctx) {
-    ctx.fillStyle = options.color ?? '#9b59b6'
-    ctx.fillRect(state.x, state.y, state.w, state.h)
+    const sprite = options.sprite ?? null
+    if (sprite) {
+      sprite.draw(ctx, state.x, state.y, state.w, state.h)
+    } else {
+      ctx.fillStyle = options.color ?? '#9b59b6'
+      ctx.fillRect(state.x, state.y, state.w, state.h)
+    }
     ctx.fillStyle = options.bulletColor ?? '#e74c3c'
     for (const b of bossBullets) {
       ctx.fillRect(b.x, b.y, b.w, b.h)

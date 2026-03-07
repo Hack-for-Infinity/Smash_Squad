@@ -8,6 +8,7 @@ import { createPlayer } from './player.js'
 import { createBulletManager } from './bullet.js'
 import { createAlienSwarm } from './alien.js'
 import { createBoss } from './boss.js'
+import { createSprites } from './sprites/index.js'
 import { drawHud } from './drawHud.js'
 import { drawScoreCard } from './scoreCard.js'
 import { drawDefeatCard } from './defeatCard.js'
@@ -27,13 +28,15 @@ export function initGame(canvas) {
   if (!canvas || !canvas.getContext) return
 
   const ctx = canvas.getContext('2d')
+  if (ctx) ctx.imageSmoothingEnabled = false
   let width = canvas.width
   let height = canvas.height
   let animationId = null
 
-  const player = createPlayer({ width, height })
+  const sprites = createSprites()
+  const player = createPlayer({ width, height, sprite: sprites.player })
   const bullets = createBulletManager()
-  const aliens = createAlienSwarm({ width })
+  const aliens = createAlienSwarm({ width, sprite: sprites.alien })
 
   let phase = 'aliens'
   let bossIncomingStart = 0
@@ -119,7 +122,7 @@ export function initGame(canvas) {
     } else if (phase === 'boss_incoming') {
       if (performance.now() - bossIncomingStart >= BOSS_INCOMING_DURATION_MS) {
         phase = 'boss'
-        boss = createBoss({ width })
+        boss = createBoss({ width, sprite: sprites.boss })
         bullets.bullets.splice(0, bullets.bullets.length)
       }
       player.update(dt, InputBus)
@@ -158,6 +161,7 @@ export function initGame(canvas) {
   }
 
   function draw() {
+    ctx.imageSmoothingEnabled = false
     ctx.fillStyle = BACKGROUND
     ctx.fillRect(0, 0, width, height)
     player.draw(ctx)
