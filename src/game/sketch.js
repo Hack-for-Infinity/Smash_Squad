@@ -9,8 +9,12 @@ import { createBulletManager } from './bullet.js'
 import { createAlienSwarm } from './alien.js'
 import { createBoss } from './boss.js'
 import { drawHud } from './drawHud.js'
+import { drawScoreCard } from './scoreCard.js'
+import { drawDefeatCard } from './defeatCard.js'
+import { drawCongratulationsCard } from './congratulationsCard.js'
 
 const BACKGROUND = '#0a0a12'
+const SCORE_PER_ALIEN = 3
 const BOSS_INCOMING_DURATION_MS = 3000
 const BOSS_DAMAGE_PER_HIT = 10
 const PLAYER_BULLET_DAMAGE_TO_BOSS = 15
@@ -34,6 +38,7 @@ export function initGame(canvas) {
   let phase = 'aliens'
   let bossIncomingStart = 0
   let boss = null
+  let score = 0
 
   function resize() {
     width = canvas.width
@@ -72,6 +77,7 @@ export function initGame(canvas) {
         if (!a.alive) continue
         if (hitTest(b, a)) {
           a.alive = false
+          score += SCORE_PER_ALIEN
           b.y = -999
           break
         }
@@ -79,8 +85,20 @@ export function initGame(canvas) {
     }
   }
 
+  function aliensReachedPlayer() {
+    const playerY = player.state.y
+    for (const a of aliens.getAlive()) {
+      if (a.y + a.h >= playerY) return true
+    }
+    return false
+  }
+
   function update(dt) {
-    if (!player.isAlive()) return
+    if (phase === 'defeat' || phase === 'victory') return
+    if (!player.isAlive() && phase === 'boss') {
+      phase = 'defeat'
+      return
+    }
     if (phase === 'aliens') {
       player.update(dt, InputBus)
       if (InputBus.isShooting) {
@@ -90,6 +108,10 @@ export function initGame(canvas) {
       bullets.update(dt)
       aliens.update(dt)
       updateCollision()
+      if (aliensReachedPlayer()) {
+        phase = 'defeat'
+        return
+      }
       if (aliens.getAlive().length === 0) {
         phase = 'boss_incoming'
         bossIncomingStart = performance.now()
@@ -98,6 +120,7 @@ export function initGame(canvas) {
       if (performance.now() - bossIncomingStart >= BOSS_INCOMING_DURATION_MS) {
         phase = 'boss'
         boss = createBoss({ width })
+        bullets.bullets.splice(0, bullets.bullets.length)
       }
       player.update(dt, InputBus)
     } else if (phase === 'boss') {
@@ -112,6 +135,8 @@ export function initGame(canvas) {
         updateBossBulletsVsPlayer()
       }
       updatePlayerBulletsVsBoss()
+      if (!player.isAlive()) phase = 'defeat'
+      else if (!boss.isAlive()) phase = 'victory'
     }
   }
 
@@ -141,6 +166,9 @@ export function initGame(canvas) {
     if (phase === 'boss_incoming') drawBossIncomingMessage()
     else if (phase === 'boss' && boss && boss.isAlive()) boss.draw(ctx)
     drawHud(ctx, player, width, boss)
+    drawScoreCard(ctx, width, score)
+    if (phase === 'defeat') drawDefeatCard(ctx, width, height)
+    if (phase === 'victory') drawCongratulationsCard(ctx, width, height)
   }
 
   let lastTime = performance.now()
