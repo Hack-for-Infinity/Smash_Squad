@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+ import { useRef, useEffect } from 'react'
 import { initGame } from './game/sketch.js'
 import { FaceTracker } from './face/faceTracker.jsx'
 import './face/inputBus.jsx'
