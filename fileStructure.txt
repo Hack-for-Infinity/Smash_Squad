@@ -1,0 +1,14 @@
+src/
+├── face/
+│   ├── FaceTracker.js        # MediaPipe setup
+│   ├── InputManager.js       # coordinates → LEFT RIGHT SHOOT
+│   └── Calibration.js        # stores personal thresholds
+├── game/
+│   ├── sketch.js             # p5 game loop
+│   ├── Player.js
+│   ├── AlienGrid.js
+│   └── Bullet.js
+├── ui/
+│   ├── ControllerPanel.jsx   # LEFT side — the real product
+│   └── GamePanel.jsx         # RIGHT side — the demo vehicle
+└── App.jsx                   # splits the two panels
