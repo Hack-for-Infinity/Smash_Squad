@@ -3,7 +3,7 @@
  */
 
 const PADDING = 16
-const FONT = 'bold 24px sans-serif'
+const FONT = 'bold 18px sans-serif'
 const TEXT_COLOR = '#fff'
 const LABEL = 'SCORE: '
 

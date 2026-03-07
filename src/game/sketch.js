@@ -14,10 +14,10 @@ import { drawDefeatCard } from './defeatCard.js'
 import { drawCongratulationsCard } from './congratulationsCard.js'
 
 const BACKGROUND = '#0a0a12'
-const SCORE_PER_ALIEN = 3
+const SCORE_PER_ALIEN = 1
 const BOSS_INCOMING_DURATION_MS = 3000
 const BOSS_DAMAGE_PER_HIT = 10
-const PLAYER_BULLET_DAMAGE_TO_BOSS = 15
+const PLAYER_BULLET_DAMAGE_TO_BOSS = 10
 
 function hitTest(b, a) {
   return b.x + b.w > a.x && b.x < a.x + a.w && b.y < a.y + a.h && b.y + b.h > a.y
