@@ -2,11 +2,12 @@ export const InputBus = {
   isLeft: false,
   isRight: false,
   isShooting: false,
-  deadZone: 0.22, // face tracker: center band width (0.39–0.61); larger = less jitter
+  deadZone: 0.15, // face tracker: center band width (0.39–0.61); larger = less jitter
 }
 
 // Keyboard override: only update InputBus when our keys are pressed/released
 // so face tracker input is not wiped by other keypresses
+// Do not use during demo - Kaushal
 window.addEventListener('keydown', (e) => {
   if (e.key === ' ') {
     e.preventDefault()
