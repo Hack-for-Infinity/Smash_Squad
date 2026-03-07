@@ -13,9 +13,9 @@ const ALIEN_COLS = 10
 const ALIEN_ROWS = 3
 const spacingX = 24
 const spacingY = 24
-const ALIEN_SPEED_X = 6
-const ALIEN_DROP = 28
-const BOUNDARY_MARGIN = 40
+const ALIEN_SPEED_X = 80// pixels per second
+const ALIEN_DROP = 10
+const BOUNDARY_MARGIN = 15
 const BULLET_SPEED = -8
 const BULLET_SIZE = 4
 const FIRE_COOLDOWN_MS = 200
@@ -59,8 +59,6 @@ export function initGame(canvas) {
 
   let aliens = createAliens()
   let alienDir = 1
-  let alienMoveTimer = 0
-  const ALIEN_MOVE_INTERVAL = 400
 
   let bullets = []
   let lastShotTime = 0
@@ -99,21 +97,24 @@ export function initGame(canvas) {
       return b.y > -b.h
     })
 
-    // Alien movement (side-to-side; when they hit the inner boundary, reverse and move down)
+    // Alien movement: smooth time-based (millis/dt), reverse and drop when hitting boundary
     const boundaryLeft = BOUNDARY_MARGIN
     const boundaryRight = width - BOUNDARY_MARGIN
-    alienMoveTimer += dt
-    if (alienMoveTimer >= ALIEN_MOVE_INTERVAL) {
-      alienMoveTimer = 0
-      const living = aliens.filter((a) => a.alive)
-      let hitEdge = false
+    const living = aliens.filter((a) => a.alive)
+    const moveX = (ALIEN_SPEED_X * alienDir * dt) / 1000
+    for (const a of living) {
+      a.x += moveX
+    }
+    let hitEdge = false
+    for (const a of living) {
+      if (a.x <= boundaryLeft || a.x + a.w >= boundaryRight) hitEdge = true
+    }
+    if (hitEdge) {
+      alienDir *= -1
       for (const a of living) {
-        a.x += ALIEN_SPEED_X * alienDir
-        if (a.x <= boundaryLeft || a.x + a.w >= boundaryRight) hitEdge = true
-      }
-      if (hitEdge) {
-        alienDir *= -1
-        for (const a of living) a.y += ALIEN_DROP
+        a.y += ALIEN_DROP
+        a.x -= moveX
+        a.x = Math.max(boundaryLeft, Math.min(boundaryRight - a.w, a.x))
       }
     }
 
@@ -169,7 +170,6 @@ export function initGame(canvas) {
 
   function start() {
     lastTime = performance.now()
-    alienMoveTimer = 0
     animationId = requestAnimationFrame(loop)
   }
 
