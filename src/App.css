@@ -19,6 +19,41 @@
   padding: 1rem;
   background: #1a1a2e;
   color: #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.game-ui-header {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.face-tracker-wrap {
+  min-width: 320px;
+  min-height: 240px;
+}
+
+.game-ui .face-tracker {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0a0a12;
+}
+
+.game-ui .face-tracker video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.game-ui-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #aaa;
+  line-height: 1.4;
 }
 
 .game-wrap {

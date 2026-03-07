@@ -1,5 +1,7 @@
 import { useRef, useEffect } from 'react'
 import { initGame } from './game/sketch.js'
+import { FaceTracker } from './face/faceTracker.jsx'
+import './face/inputBus.jsx'
 import './App.css'
 
 function App() {
@@ -14,7 +16,13 @@ function App() {
 
   return (
     <div className="app-layout">
-      <aside className="game-ui">Game UI</aside>
+      <aside className="game-ui">
+        <div className="game-ui-header">Face controls</div>
+        <div className="face-tracker-wrap">
+          <FaceTracker showVideo />
+        </div>
+        <p className="game-ui-hint">Move your head left/right to move. Open mouth to shoot.</p>
+      </aside>
       <div className="game-wrap">
         <canvas
           ref={canvasRef}

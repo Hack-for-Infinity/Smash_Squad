@@ -5,19 +5,19 @@ export const InputBus = {
   deadZone: 0.1,
 }
 
-// keyboard tester — arrow keys for movement, Space for shoot
+// Keyboard override: only update InputBus when our keys are pressed/released
+// so face tracker input is not wiped by other keypresses
 window.addEventListener('keydown', (e) => {
-  InputBus.isLeft = false
-  InputBus.isRight = false
-  if (e.key === ' ') e.preventDefault()
-
+  if (e.key === ' ') {
+    e.preventDefault()
+    InputBus.isShooting = true
+  }
   if (e.key === 'ArrowLeft') InputBus.isLeft = true
   if (e.key === 'ArrowRight') InputBus.isRight = true
-  if (e.key === ' ') InputBus.isShooting = true
 })
 
 window.addEventListener('keyup', (e) => {
+  if (e.key === ' ') InputBus.isShooting = false
   if (e.key === 'ArrowLeft') InputBus.isLeft = false
   if (e.key === 'ArrowRight') InputBus.isRight = false
-  if (e.key === ' ') InputBus.isShooting = false
 })
